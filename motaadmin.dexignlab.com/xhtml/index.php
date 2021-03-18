@@ -944,6 +944,7 @@
 					    		$m =$_POST['mt'];
 					    	}
 					    	?>
+
 							<div class="col-xl-6 col-lg-12 col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
@@ -970,42 +971,78 @@
                                 </div>
                             </div>
 
+                            <?php
+							if(empty($_POST['mr'])){
+					    		$r ="100.000";
+					    	}
+					    	else{
+					    		$r =$_POST['mr'];
+					    	}
+					    	?>
+
+                            <div class="col-xl-6 col-lg-12 col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">REALISASI MATA UANG</h4>
+                                        <form action="index.php" method="post">
+	                                        <select name="mr">
+	                                        	<option <?php if($r === "100.000"){echo "selected";} ?>>100.000</option>
+	                                        	<option <?php if($r === "50.000"){echo "selected";} ?>>50.000</option>
+	                                        	<option <?php if($r === "20.000"){echo "selected";} ?>>20.000</option>
+	                                        	<option <?php if($r === "10.000"){echo "selected";} ?>>10.000</option>
+	                                        	<option <?php if($r === "2.000"){echo "selected";} ?>>2.000</option>
+	                                        	<option <?php if($r === "1.000"){echo "selected";} ?>>1.000</option>
+	                                        	<option <?php if($r === "500"){echo "selected";} ?>>500</option>
+	                                        	<option <?php if($r === "200"){echo "selected";} ?>>200</option>
+	                                        	<option <?php if($r === "100"){echo "selected";} ?>>100</option>
+	                                        	<option <?php if($r === "50"){echo "selected";} ?>>50</option>
+	                                        </select>
+	                                        <input class="btn btn-outline-primary btn-xs" type="submit" name="">
+                                    	</form>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="real"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
 					<div class="col-xl-6 col-xxl-12 col-lg-12 col-md-12">
 						<div id="user-activity" class="card">
 							<div class="card-header border-0 pb-0 d-sm-flex d-block">
 								<div>
-									<h4 class="card-title">History 2013 - 2020</h4>
-									<p class="mb-1">Lorem Ipsum is simply dummy text of the printing</p>
+									<h4 class="card-title">PERBANDINGAN</h4>
+									<p class="mb-1">Perbandingan Proyeksi dan Realisasi Mata Uang</p>
 								</div>
-								<div class="card-action">
-									<ul class="nav nav-tabs" role="tablist">
-										<li class="nav-item">
-											<a class="nav-link active" data-toggle="tab" href="#user" role="tab">
-												Day
-											</a>
-										</li>
-										<!-- <li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#session" role="tab">
-												Week
-											</a>
-										</li> -->
-										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#bounce" role="tab">
-												Month
-											</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#session-duration" role="tab">
-												Year
-											</a>
-										</li>
-									</ul>
-								</div>
+
+								<?php
+							if(empty($_POST['mp'])){
+					    		$p ="100.000";
+					    	}
+					    	else{
+					    		$p =$_POST['mp'];
+					    	}
+					    	?>
+								<form action="index.php" method="post">
+	                                        <select name="mp">
+	                                        	<option <?php if($p === "100.000"){echo "selected";} ?>>100.000</option>
+	                                        	<option <?php if($p === "50.000"){echo "selected";} ?>>50.000</option>
+	                                        	<option <?php if($p === "20.000"){echo "selected";} ?>>20.000</option>
+	                                        	<option <?php if($p === "10.000"){echo "selected";} ?>>10.000</option>
+	                                        	<option <?php if($p === "2.000"){echo "selected";} ?>>2.000</option>
+	                                        	<option <?php if($p === "1.000"){echo "selected";} ?>>1.000</option>
+	                                        	<option <?php if($p === "500"){echo "selected";} ?>>500</option>
+	                                        	<option <?php if($p === "200"){echo "selected";} ?>>200</option>
+	                                        	<option <?php if($p === "100"){echo "selected";} ?>>100</option>
+	                                        	<option <?php if($p === "50"){echo "selected";} ?>>50</option>
+	                                        </select>
+	                                        <input class="btn btn-outline-primary btn-xs" type="submit" name="">
+                                    	</form>
+								
 							</div>
 							<div class="card-body">
 								<div class="tab-content" id="myTabContent">
 									<div class="tab-pane fade show active" id="user" role="tabpanel">
-										<canvas id="activity" class="chartjs"></canvas>
+										<canvas id="bange" class="chartjs"></canvas>
 									</div>
 								</div>
 							</div>
@@ -1211,6 +1248,373 @@ var myChart = new Chart(ctx, {
 });
 </script>
 
+<script>
+var ctx = document.getElementById('real').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+
+<?php
+			  require_once 'db.php';
+
+
+			  $sql = "SELECT count(*) as c FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $bb = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+    data: {
+        labels: [0,<?php while($row = $result->fetch_assoc()){
+			                    echo"'";echo $row['bulan'];echo "'";
+			                  	if($bb != 1){ echo ",";$bb--; }else{}} ?>],
+        datasets: [{
+            label: 'Banyak',
+            
+           
+            <?php
+
+			  require_once 'db.php';
+
+			  $sql = "SELECT count(*) as c FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $aa = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+
+            data: [0,<?php while($row = $result->fetch_assoc()){
+			                    if($r === "100.000"){
+			                    	echo $row['100.000'];
+			                	}
+			                	if ($r === "50.000"){
+			                		echo $row['50.000'];
+			                	}
+			                	if ($r === "20.000"){
+			                		echo $row['20.000'];
+			                	}
+			                	if ($r === "10.000"){
+			                		echo $row['10.000'];
+			                	}
+			                	if ($r === "5.000"){
+			                		echo $row['5.000'];
+			                	}
+			                	if ($r === "2.000"){
+			                		echo $row['2.000'];
+			                	}
+			                	if ($r === "1.000"){
+			                		echo $row['1.000'];
+			                	}
+			                	if ($r === "500"){
+			                		echo $row['500'];
+			                	}
+			                	if ($r === "200"){
+			                		echo $row['200'];
+			                	}
+			                	if ($r === "100"){
+			                		echo $row['100'];
+			                	}
+			                	if ($r === "50"){
+			                		echo $row['50'];
+			                	}
+			                  	if($aa != 1){ echo ",";$aa--; }else{}} ?>],
+            backgroundColor: [
+            	'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+<script>
+	var activity = document.getElementById("bange");
+    if (activity !== null) {
+    	
+        var activityData = [{
+        	<?php
+
+			  require_once 'db.php';
+
+			  $sql = "SELECT count(*) as c FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $k = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+                first: [0,<?php while($row = $result->fetch_assoc()){
+			                    if($m === "100.000"){
+			                    	echo $row['100.000'];
+			                	}
+			                	if ($m === "50.000"){
+			                		echo $row['50.000'];
+			                	}
+			                	if ($m === "20.000"){
+			                		echo $row['20.000'];
+			                	}
+			                	if ($m === "10.000"){
+			                		echo $row['10.000'];
+			                	}
+			                	if ($m === "5.000"){
+			                		echo $row['5.000'];
+			                	}
+			                	if ($m === "2.000"){
+			                		echo $row['2.000'];
+			                	}
+			                	if ($m === "1.000"){
+			                		echo $row['1.000'];
+			                	}
+			                	if ($m === "500"){
+			                		echo $row['500'];
+			                	}
+			                	if ($m === "200"){
+			                		echo $row['200'];
+			                	}
+			                	if ($m === "100"){
+			                		echo $row['100'];
+			                	}
+			                	if ($m === "50"){
+			                		echo $row['50'];
+			                	}
+			                  	if($k != 1){ echo ",";$k--; }else{}} ?>], 	
+            }
+        ];
+        activity.height = 300;
+		
+        var config = {
+            type: "line",
+            data: {
+            	<?php
+			  require_once 'db.php';
+
+
+			  $sql = "SELECT count(*) as c FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $h = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+                labels: [0,<?php while($row = $result->fetch_assoc()){
+			                    echo"'";echo $row['bulan'];echo "'";
+			                  	if($h != 1){ echo ",";$h--; }else{}} ?>
+                ],
+                datasets: [
+					{
+						label: "Proyeksi",
+						<?php
+
+			  require_once 'db.php';
+
+			  $sql = "SELECT count(*) as c FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $k = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM proyeksi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+						data:  [0,<?php while($row = $result->fetch_assoc()){
+			                    if($p === "100.000"){
+			                    	echo $row['100.000'];
+			                	}
+			                	if ($p === "50.000"){
+			                		echo $row['50.000'];
+			                	}
+			                	if ($p === "20.000"){
+			                		echo $row['20.000'];
+			                	}
+			                	if ($p === "10.000"){
+			                		echo $row['10.000'];
+			                	}
+			                	if ($p === "5.000"){
+			                		echo $row['5.000'];
+			                	}
+			                	if ($p === "2.000"){
+			                		echo $row['2.000'];
+			                	}
+			                	if ($p === "1.000"){
+			                		echo $row['1.000'];
+			                	}
+			                	if ($p === "500"){
+			                		echo $row['500'];
+			                	}
+			                	if ($p === "200"){
+			                		echo $row['200'];
+			                	}
+			                	if ($p === "100"){
+			                		echo $row['100'];
+			                	}
+			                	if ($p === "50"){
+			                		echo $row['50'];
+			                	}
+			                  	if($k != 1){ echo ",";$k--; }else{}} ?>],
+						borderColor: 'rgba(5, 5, 5, 5)',
+						borderWidth: "0",
+						backgroundColor: 'rgba(0, 0, 0, 0)'
+						
+					},
+					{
+						label: "Realisasi",
+						<?php
+
+			  require_once 'db.php';
+
+			  $sql = "SELECT count(*) as c FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);
+			  while($row = $result->fetch_assoc()){
+			  $d = $row['c'];
+			  } 
+
+
+			  $sql = "SELECT * FROM realisasi Where tahun='2020'";
+			  $result = $db->query($sql);    
+
+			?>
+						data:  [0,<?php while($row = $result->fetch_assoc()){
+			                    if($p === "100.000"){
+			                    	echo $row['100.000'];
+			                	}
+			                	if ($p === "50.000"){
+			                		echo $row['50.000'];
+			                	}
+			                	if ($p === "20.000"){
+			                		echo $row['20.000'];
+			                	}
+			                	if ($p === "10.000"){
+			                		echo $row['10.000'];
+			                	}
+			                	if ($p === "5.000"){
+			                		echo $row['5.000'];
+			                	}
+			                	if ($p === "2.000"){
+			                		echo $row['2.000'];
+			                	}
+			                	if ($p === "1.000"){
+			                		echo $row['1.000'];
+			                	}
+			                	if ($p === "500"){
+			                		echo $row['500'];
+			                	}
+			                	if ($p === "200"){
+			                		echo $row['200'];
+			                	}
+			                	if ($p === "100"){
+			                		echo $row['100'];
+			                	}
+			                	if ($p === "50"){
+			                		echo $row['50'];
+			                	}
+			                  	if($d != 1){ echo ",";$d--; }else{}} ?>],
+						borderColor: 'rgba(26, 51, 213, 1)',
+						borderWidth: "0",
+						backgroundColor: 'rgba(0, 0, 0, 0)'
+						
+					}
+				]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+				
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            color: "rgba(89, 59, 219,0.1)",
+                            drawBorder: true
+                        },
+                        ticks: {
+                            fontColor: "#999",
+                        },
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                            zeroLineColor: "transparent"
+                        },
+                        ticks: {
+                            stepSize: 5,
+                            fontColor: "#999",
+                            fontFamily: "Nunito, sans-serif"
+                        }
+                    }]
+                },
+                tooltips: {
+                    mode: "index",
+                    intersect: false,
+                    titleFontColor: "#888",
+                    bodyFontColor: "#555",
+                    titleFontSize: 12,
+                    bodyFontSize: 15,
+                    backgroundColor: "rgba(256,256,256,0.95)",
+                    displayColors: true,
+                    xPadding: 10,
+                    yPadding: 7,
+                    borderColor: "rgba(220, 220, 220, 0.9)",
+                    borderWidth: 2,
+                    caretSize: 6,
+                    caretPadding: 10
+                }
+            }
+        };
+
+        var ctx = document.getElementById("bange").getContext("2d");
+        var myLine = new Chart(ctx, config);
+
+        var items = document.querySelectorAll("#user-activity .nav-tabs .nav-item");
+        items.forEach(function(item, index) {
+            item.addEventListener("click", function() {
+                config.data.datasets[0].data = activityData[index].first;
+                myLine.update();
+            });
+        });
+    }
+</script>
 </body>
 
 <!-- Mirrored from motaadmin.dexignlab.com/xhtml/index-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Mar 2021 10:38:07 GMT -->
